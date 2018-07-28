@@ -19,6 +19,7 @@ def fibDepth(n, depth=0):
     depth += 1
     return(fibDepth(n-1, depth) + fibDepth(n-2, depth))
 
+# Uses memoized recursion to return the nth number of the Fibonacci sequence in O(n) time. 
 def fibMemoized(n):
     global fibNumbers
     global memoizedRefCount
@@ -35,6 +36,9 @@ def fibMemoized(n):
     # Otherwise, save the result of the fibonacci calculation for use later
     else:
         fibNumbers[n] = fibMemoized(n-1) + fibMemoized(n-2)
+
+def fibDynamic(n):
+    return
 
     
 
@@ -68,12 +72,6 @@ def main():
 
     print("Non-memoized calculation took {} seconds".format(nonMemoizedTime))
     print("Memoized calculation took {} seconds".format(memoizedTime))
-
-
-
-    
-
-
 
 if __name__ == "__main__":
     main()
