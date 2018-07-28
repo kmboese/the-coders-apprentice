@@ -1,0 +1,3 @@
+#Python compiler files
+*.pyc
+__python_cache__/
