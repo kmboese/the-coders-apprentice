@@ -20,11 +20,9 @@ def fibDepth(n, depth=0):
 # Uses memoized recursion to return the nth number of the Fibonacci sequence in O(n) time. 
 def fibMemoizedTopDown(n):
     global fibNumbers
-    global memoizedRefCount
 
     # If the nth fibonacci number has already been calculated, simply return its value
     if (fibNumbers[n]):
-        memoizedRefCount += 1
         return fibNumbers[n]
 
     # Base case
