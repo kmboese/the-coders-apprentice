@@ -1,3 +1,7 @@
-#Python compiler files
+# Python compiler files
 *.pyc
 __python_cache__/
+
+# VS Files
+.vscode/
+settings.json
