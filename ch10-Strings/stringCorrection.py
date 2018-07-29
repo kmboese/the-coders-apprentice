@@ -1,112 +1,125 @@
+import re
 PUNCTUATION = [",", ".", "!", "?", "..."]
 DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday",\
     "saturday"]
 
-def isCaps(char):
+def isUpper(char):
     return (char >= "A" and char <= "Z")
 
 def isLower(char):
     return (char >= "a" and char <= "z")
 
 def isLetter(char):
-    return (isCaps(char) or isLower(char))
+    return (isUpper(char) or isLower(char))
 
-def capitalizeDays(stringList):
-    ret = []
-    for s in stringList:
-        if s.strip().strip(",").lower() in DAYS:
-            print("{} is a day of the week".format(s))
-            if isLower(s[0]):
-                tmp = s[0].upper() + s[1:]
-                ret.append(tmp)
-        else:
-            ret.append(s)
-    return ret
+# Split a string into tokens based on whitespace and 
+# punctuation.
+def tokenize(s):
+    tokens = []
+    # Split based on any non-word string
+    tokens = re.split(r'(\W+)', s)
+    return tokens
 
-
-#Capitalize the first word of a sentence if it is an alpha character
-def capitalize(stringList):
-    ret = []
-    if stringList:
-        firstWord = stringList[0]
-        if isLetter(firstWord[0]):
-            if len(firstWord) > 1:
-                tmp = firstWord[0].upper() + firstWord[1:]
-            else:
-                tmp = firstWord[0].upper()
-            ret.append(tmp)
-    ret.extend(stringList[1:])
-    return ret
-
-
-# change all consecutive double upper case letters to single uppercase and 
-# single lowercase (i.e. "HEllo" becomes "Hello") and invert cAPS mISTAKES.
-def fixCaps(stringList):
-    ret = []
-    for s in stringList:
-        changed = False
-        if len(s) < 2:
-            ret.append(s)
-            continue
-        # If there are two consecutive caps at the beginning of a word, turn 
-        # the second one into a lowercase letter.
-        if (isCaps(s[0]) and isCaps(s[1])):
-            if len(s) > 2:
-                ret.append(s[0] + s[1].lower() + s[2:])
-            # string is exactly two characters long
-            else:
-                ret.append(s[0] + s[1].lower())
-        # Correct caps lock mistakes
-        elif isLower(s[0]) and s[1:] == s[1:].upper():
-            ret.append(s[0].upper() + s[1:].lower())
-        # Otherwise, make no changes and append the string as-is
-        else:
-            ret.append(s)
-    return ret
-
-
-# Remove a string if its immediate successor is the same string
-def removeImmediateDuplicates(stringList):
-    changed = None
-    ret = []
-    for i in range(0, len(stringList)-1):
-        changed = False
-        # Check if the strings are the same except for one puncuation mark
-        # at the end.
-        for punc in PUNCTUATION: 
-            if stringList[i].split(punc)[0] == \
-                stringList[i+1].split(punc)[0]:
-                changed = True
-                break
-        # If adjacent strings are identical, remove one of them
-        if not changed and stringList[i] != stringList[i+1]:
-            ret.append(stringList[i] + " ")
-            continue
-    ret.append(stringList[len(stringList)-1])
-    return ret
-
-
-def correctString(s):
+# Remove double caps from a word (i.e. "HEllo"-->"Hello")
+def removeDoubleCaps(s):
     ret = ""
-    substrings = s.split()
-    capitalized = capitalize(substrings)
-    fixedCaps = fixCaps(capitalized)
-    noDupes = removeImmediateDuplicates(fixedCaps)
-    capitalizedDays = capitalizeDays(noDupes)
+    if len(s) < 2:
+        return s
+    else:
+        if isUpper(s[0]) and isUpper(s[1]):
+            if len(s) == 2:
+                ret = s[0] + s[1].lower()
+            else:
+                ret = s[0] + s[1].lower() + s[2:]
+            return ret
+        else:
+            return s
 
-    for s in capitalizedDays:
-        ret += s
-    print("Corrected string: {}".format(ret))
+# Returns an empty string if a duplicate is detected
+def isDuplicate(s1, s2):
+    if s1.lower() == s2.lower():
+        return True
+    else:
+        return False
+
+# Check if a word is a day of the week
+def isDayOfWeek(s):
+    return (s.lower() in DAYS)
+
+# Check if a word has double caps
+def hasDoubleCaps(s):
+    if len(s) <= 1:
+        return False
+    elif len(s) >= 2 and isUpper(s[0]) and isUpper(s[1]):
+        return True
+    else:
+        return False
+# Check if a word has cAPS cASING
+def hasCapsCasing(s):
+    if len(s) < 2:
+        return False
+    elif len(s) >=2 and isLower(s[0]) and isUpper(s[1]):
+        return True
+
+# Fix caps casing
+def fixCapsCasing(s):
+    return s[0].upper() + s[1:].lower()
+
+# Capitalize the first word of a sentence
+def capitalizeFirstWord(string):
+    if len(string) == 1:
+        return string[0].upper()
+    else:
+        return string[0].upper() + string[1:]
+
+def correctSentence(s):
+    ret = ""
+    tokens = tokenize(s)
+    duplicateRemoved = False
+
+    # Correct strings in the sentence
+    for i in range(0, len(tokens)-1):
+        # Only correct words that are at least one character 
+        # and start with a letter
+        if len(tokens[i]) >= 1 and isLetter(tokens[i][0]):
+            # If a duplicate pair is found, skip the current string to remove
+            # the duplicate.
+            if isDuplicate(tokens[i], tokens[i+2]):
+                duplicateRemoved = True
+                continue
+
+            # If the first word start with a lowercase letter, capitalize it
+            elif i == 0 and isLower(tokens[0][0]):
+                ret += capitalizeFirstWord(tokens[0])
+                continue
+
+            # If the word has DOuble CAps, remove the second caps letter
+            elif hasDoubleCaps(tokens[i]):
+                ret += removeDoubleCaps(tokens[i])
+                continue
+
+            # If the word has cAPS cASING, fix it
+            elif hasCapsCasing(tokens[i]):
+                ret += fixCapsCasing(tokens[i])
+                continue
+
+            # If the word is a day of the week and lowercase, make it 
+            # uppercase
+            elif isDayOfWeek(tokens[i]):
+                ret += tokens[i][0].upper() + tokens[i][1:]
+                continue
+
+            # Default: add the token to the string
+            else:
+                ret += tokens[i]
+            
+        # Non-word string
+        else:
+            # Remove the trailing whitespace after a string is removed
+            if tokens[i] == " " and duplicateRemoved:
+                duplicateRemoved = False
+                continue
+            else:
+                ret += tokens[i]
+
     return ret
-
-def main():
-    #s = "hello there KEvin, gOOD sir sir. Great saturday, huh?"
-    s = '''as it turned out our change meeting with REverend \
-aRTHUR BElling was was to change our whole way of life, and \
-every sunday we'd hurry along to St 100NY up the Cream BUn \
-and Jam...'''
-    print("Original string: {}".format(s))
-    corrected = correctString(s)
-
-if __name__ == "__main__":
-    main()
