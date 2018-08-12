@@ -13,7 +13,7 @@ def main():
     deck = createDeck()
     print("Original deck: {}".format(deck))
     shuffledDeck = shuffleDeck(deck)
-    print("Shuffled deck: {}".format(shuffledDeck))
+    print("\nShuffled deck: {}".format(shuffledDeck))
 
     # Verify that the shuffled deck contains the same cards as the original deck
     testShuffle()
