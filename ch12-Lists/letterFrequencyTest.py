@@ -13,8 +13,16 @@ cutting me\nSlack is for cutting me more.'''
     print("Text is:\n\"{}\"\n\nFrequencies:".format(text))
     printFrequencies(frequencies)
 
+def testSingleLetterFrequency():
+    text = '''aAAAAAAAAAAaaaaaaaaaaAAAAAAAAAAAAAaaaaaAaAaaAaAaAaAaAaAaAa'''
+    frequencies = countLetterFrequency(text)
+    print("Text is: \n\"{}\"\n\nFrequencies:".format(text))
+    printFrequencies(frequencies)
+
 def main():
     testLetterFrequency()
+    print()
+    testSingleLetterFrequency()
 
 if __name__ == "__main__":
     main()
