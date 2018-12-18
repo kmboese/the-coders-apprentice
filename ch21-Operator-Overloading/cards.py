@@ -30,21 +30,28 @@ class Card:
     def __le__(self, rhs):
         return (self == rhs or self < rhs)
 
-
+    # Object representation for Card class
     def __repr__(self):
         return ("({}, {})".format(self.suit, self.value))
 
 def main():
     cards = [Card("Hearts", 5), Card("Spades", 5), \
-        Card("Diamonds", "Ace"), Card("Diamonds", "Jack") ]
-    for i in range(len(cards)-1):
-        if (cards[i] == cards[i+1]):
-            print("{} == {}".format(cards[i], cards[i+1]))
-        if (cards[i] < cards[i+1]):
-            print("{} < {}".format(cards[i], cards[i+1]))
-        if (cards[i] > cards[i+1]):
-            print("{} > {}".format(cards[i], cards[i+1]))
+        Card("Diamonds", "Ace"), Card("Diamonds", "Jack"),\
+        Card("Hearts", 7) ]
+    test = Card("Clubs", 7)
 
+    # Test equality operators
+    for card in cards:
+        if (test == card):
+            print("{} == {}".format(test, card))
+        if (test <= card):
+            print("{} <= {}".format(test, card))
+        if (test < card):
+            print("{} < {}".format(test, card))
+        if (test > card):
+            print("{} > {}".format(test, card))
+        if (test >= card):
+            print("{} >= {}".format(test, card))
 
 if __name__=="__main__":
     main()
