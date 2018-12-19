@@ -25,6 +25,8 @@ class Drawpile:
         return(len(self.cards))
     def __getitem__(self, index):
         return(self.cards[index])
+    def __repr__(self):
+        return("{}".format(self.cards))
 
 
 '''
