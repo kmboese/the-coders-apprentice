@@ -1,3 +1,7 @@
+# Builds a dictionary from a list of strings as the 
+# keys, and the frequency of their occurrence as the
+# values.
+
 wordlist = ["apple","durian","banana","durian","apple","cherry",
 "cherry","mango","apple","apple","cherry","durian","banana",
 "apple","apple","apple","apple","banana","apple"]
