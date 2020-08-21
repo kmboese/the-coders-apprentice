@@ -5,3 +5,6 @@ __python_cache__/
 # VS Files
 .vscode/
 settings.json
+
+# Filetypes
+*.pdf
